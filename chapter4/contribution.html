@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>画像投稿掲示板</title>
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/animate.css">
+    <link href="css/animate.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet"/>
+</head>
+
+<body>
+<header id="header">
+    <nav class="navbar navbar-default navbar-static-top" role="banner">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div class="navbar-collapse collapse">
+                <div class="menu">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation"><a href="index.html">掲示板</a></li>
+                        <li role="presentation"><a href="contribution.html" class="active">投稿</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!--/.container-->
+    </nav>
+    <!--/nav-->
+</header>
+<!--/header-->
+
+<section class="contact-page">
+    <div class="container">
+        <div class="text-center">
+            <h2>投稿</h2>
+            <p>日々の思い出を写真と共に。。。</p>
+        </div>
+        <div class="row contact-wrap">
+            <div class="col-md-6 col-md-offset-3">
+                <form>
+                    <div class="form-group">
+                        <input type="text" name="contributor" class="form-control" id="contributor" placeholder="投稿者"
+                               data-rule="minlen:4" data-msg="Please enter at least 4 chars"/>
+                        <div class="validation"></div>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="title" id="title" placeholder="タイトル"
+                               data-rule="minlen:4" data-msg="Please enter at least 8 chars of subject"/>
+                        <div class="validation"></div>
+                    </div>
+                    <div class="form-group">
+                        <textarea class="form-control" name="comment" id="comment" rows="5" data-rule="required"
+                                  data-msg="Please write something for us" placeholder="ひとこと"></textarea>
+                        <div class="validation"></div>
+                    </div>
+                    <div class="form-group">
+                        <div class="imagePreview"></div>
+                    </div>
+                    <div class="input-group">
+                        <label class="input-group-btn">
+                            <span class="btn btn-primary">
+                                Choose File<input type="file" id="uploadFile" style="display:none" class="uploadFile"
+                                                  onchange="previewFile()"/><br/>
+                            </span>
+                        </label>
+                        <img src="" height="200" alt="Image preview...">
+                    </div>
+                    <div class="text-center">
+                        <button type="button" id="submit" name="submit" class="btn btn-primary btn-lg">
+                            投稿する
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!--/.row-->
+    </div>
+    <!--/.container-->
+</section>
+<!--/#contact-page-->
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="js/jquery.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="js/bootstrap.min.js"></script>
+<script src="js/wow.min.js"></script>
+<script>
+  wow = new WOW({}).init();
+  let fileResult;
+
+  function previewFile() {
+    let preview = document.querySelector('img');
+    let file = document.querySelector('input[type=file]').files[0];
+    let reader = new FileReader();
+
+    reader.addEventListener("load", function () {
+      preview.src = reader.result;
+      fileResult = reader.result;
+    }, false);
+
+    if (file) {
+      reader.readAsDataURL(file);
+    }
+  }
+
+  $('#submit').click(function () {
+    const contributor = $('#contributor').val();    //追記
+    const title = $('#title').val();    //追記
+    const comment = $('#comment').val();    //追記
+
+    fetch('https://2rdoiwgyce.execute-api.ap-northeast-1.amazonaws.com/v1/messages',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        mode: 'no-cors',
+        body: JSON.stringify({contributor: contributor, title: title, comment: comment, content: fileResult})   //追記
+      }
+    ).then(() => {
+      alert('投稿を完了しました');
+    })
+  });
+</script>
+</body>
+
+</html>
