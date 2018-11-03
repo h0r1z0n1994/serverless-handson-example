@@ -1,3 +1,3 @@
 # serverless-handson-example
 
-https://www.slideshare.net/YoshihiroHorizono1/aws-121532056
+https://www.slideshare.net/YoshihiroHorizono1/ss-121580149
